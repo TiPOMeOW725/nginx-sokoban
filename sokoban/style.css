@@ -1,6 +1,17 @@
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  /* Adds 10px of space between all rows and columns */
-  gap: 10px;
+  justify-content: center;
+  grid-template-columns: repeat(7, 80px);
+  grid-template-rows: repeat(8, 80px);
+  gap: 0px;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+}
+
+.wall {
+  background-image: url('assets/wall.png');
+  background-size: contain;
 }
