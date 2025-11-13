@@ -21,6 +21,11 @@
   background-size: contain;
 }
 
+.player_ground {
+  background-image: url('assets/player.png') url('assets/ground_target.png');
+  background-size: contain;
+}
+
 .crate{
   background-image: url('assets/crate.png');
   background-size: contain;

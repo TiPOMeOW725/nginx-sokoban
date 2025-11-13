@@ -6,11 +6,13 @@ let map=["WWWWWWW",
     "W TCW W",
     "W     W",
     "WWWWWWW"]; /* W = Wall  T = Target  P = Player  C = Crate   X = Crate on the target  O = Player on the target*/
+let gameBoard = document.getElementById("game-board")
 let key = {};
 let direction = '';
-let isMapChanged=false
-let cratesToSet=3 // crates to set until win
+let isMapChanged = false;
+let cratesToSet = 3; // crates to set until win
 let playerPos = [4,3]; // 1st = y    2nd = x
+
 // Game cycle listen -> check -> update -> redraw
 
 function listen() {
@@ -27,35 +29,55 @@ function listen() {
       key[lowerKey] = false;
     }
   });
-  processKeyPress()
-  if(isMapChanged===true){
-    
-  }
 }
 
 function processKeyPress() {
-    switch(key){
-        case 'w':
-            direction='w'
-            move(map,direction,playerPos,cratesToSet)
-        case 's':
-            direction='s'
-            move(map,direction,playerPos,cratesToSet)
-        case 'a':
-            direction='a'
-            move(map,direction,playerPos,cratesToSet)
-        case 'd':
-            direction='d'
-            move(map,direction,playerPos,cratesToSet)
+    if (key['w']) {
+        direction = 'w';
+        let result = move(map, direction, playerPos, cratesToSet);
+        if (result) {
+            map = result.map;
+            playerPos = result.playerPos;
+            cratesToSet = result.cratesToSet;
+            isMapChanged = true;
+        }
+    } else if (key['s']) {
+        direction = 's';
+        let result = move(map, direction, playerPos, cratesToSet);
+        if (result) {
+            map = result.map;
+            playerPos = result.playerPos;
+            cratesToSet = result.cratesToSet;
+            isMapChanged = true;
+        }
+    } else if (key['a']) {
+        direction = 'a';
+        let result = move(map, direction, playerPos, cratesToSet);
+        if (result) {
+            map = result.map;
+            playerPos = result.playerPos;
+            cratesToSet = result.cratesToSet;
+            isMapChanged = true;
+        }
+    } else if (key['d']) {
+        direction = 'd';
+        let result = move(map, direction, playerPos, cratesToSet);
+        if (result) {
+            map = result.map;
+            playerPos = result.playerPos;
+            cratesToSet = result.cratesToSet;
+            isMapChanged = true;
+        }
     }
+    
+    // Clear the key after processing to prevent continuous movement
+    key = {};
 }
 
-
-function move(map, direction, playerPos,cratesToSet) {
+function move(map, direction, playerPos, cratesToSet) {
     let destination = [playerPos[0], playerPos[1]];
     let delta = [0, 0];
-    let isMapChanged=false;
-    this.cratesToSet=cratesToSet
+    
     switch(direction) {
         case 'w': delta = [-1, 0]; break;
         case 's': delta = [1, 0]; break;
@@ -94,19 +116,19 @@ function move(map, direction, playerPos,cratesToSet) {
         
         // Move crate
         newMap[crateDestination[0]][crateDestination[1]] = (crateDestinationCell === 'T') ? 'X' : 'C';
+        
         // Adjust the goal to win
-        if (crateDestinationCell === 'X'){
-            cratesToSet--
-        } else if (crateDestinationCell === 'C'){
-            cratesToSet++
+        if (crateDestinationCell === 'T') {
+            cratesToSet--;
+        } else if (destinationCell === 'X') {
+            cratesToSet++;
         }
+        
         // Move player to crate position
         newMap[destination[0]][destination[1]] = (destinationCell === 'X') ? 'O' : 'P';
-        isMapChanged=true
     } else {
         // Simple move
         newMap[destination[0]][destination[1]] = (destinationCell === 'T') ? 'O' : 'P';
-        isMapChanged=true
     }
     
     // Clear old position
@@ -115,8 +137,68 @@ function move(map, direction, playerPos,cratesToSet) {
     return {
         map: newMap.map(row => row.join('')),
         playerPos: destination,
-        isMapChanged: destination,
-        cratesToSet: destination
+        cratesToSet: cratesToSet
     };
 }
 
+function render(gameBoard, map) {
+    gameBoard.innerHTML = '';
+    for(const row of map) {
+        for(const element of row) {
+            const newDiv = document.createElement('div');
+            // Add a CSS class
+            switch(element) {
+                case 'W':
+                    newDiv.classList.add('wall');
+                    break;
+                case 'T':
+                    newDiv.classList.add('ground_target');
+                    break;
+                case 'X':
+                    newDiv.classList.add('crate_target');
+                    break;
+                case 'O':
+                    newDiv.classList.add('player_ground');
+                    break;
+                case 'C':
+                    newDiv.classList.add('crate');
+                    break;
+                case ' ':
+                    newDiv.classList.add('ground');
+                    break;
+                case 'P':
+                    newDiv.classList.add('player');
+                    break;
+            }
+            gameBoard.appendChild(newDiv);
+        }
+    }
+}
+
+function gameLoop() {
+    // Process input
+    processKeyPress();
+    
+    // Render if map changed
+    if (isMapChanged) {
+        render(gameBoard, map);
+        isMapChanged = false;
+    }
+    
+    // Check win condition
+    if (cratesToSet === 0) {
+        alert("You win! Reload the page to start again");
+    }
+    
+    // Continue the loop
+    requestAnimationFrame(gameLoop);
+}
+
+// Set up event listeners once
+listen();
+
+// Render initial state
+render(gameBoard, map);
+
+// Start the game loop
+requestAnimationFrame(gameLoop);
