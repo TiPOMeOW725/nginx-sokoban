@@ -5,6 +5,7 @@ let map=["WWWWWWW",
     "W  P  W",
     "W TCW W",
     "W     W",
+    "W     W",
     "WWWWWWW"]; /* W = Wall  T = Target  P = Player  C = Crate   X = Crate on the target  O = Player on the target*/
 let gameBoard = document.getElementById("game-board")
 let key = {};
@@ -187,13 +188,22 @@ function gameLoop() {
     
     // Check win condition
     if (cratesToSet === 0) {
+        render(gameBoard, map); // Render last time
         alert("You win! Reload the page to start again");
+        return null;
     }
-    
-    // Continue the loop
     requestAnimationFrame(gameLoop);
 }
 
+function setupGrid(gameBoard, map) {
+    const rows = map.length;
+    const cols = map[0].length;
+    
+    gameBoard.style.gridTemplateColumns = `repeat(${cols}, 80px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${rows}, 80px)`;
+}
+
+setupGrid(gameBoard, map);
 // Set up event listeners once
 listen();
 
