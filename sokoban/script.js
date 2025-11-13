@@ -12,9 +12,19 @@ let playerPos = [4,3]; // 1st = y    2nd = x
 // Game cycle listen -> check -> update -> redraw
 
 function listen() {
-    document.addEventListener('keypress', (e) => {
-        key[e.key.toLowerCase()] = true;
-    });
+  document.addEventListener('keydown', (e) => {
+    if (e.key.length === 1 && !e.repeat) {  
+      const lowerKey = e.key.toLowerCase();
+      key[lowerKey] = true;
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (e.key.length === 1) {
+      const lowerKey = e.key.toLowerCase();
+      key[lowerKey] = false;
+    }
+  });
 }
 
 function move(map, direction, playerPos) {
@@ -93,3 +103,4 @@ function processKeyPress() {
             move(map,direction,playerPos)
     }
 }
+
