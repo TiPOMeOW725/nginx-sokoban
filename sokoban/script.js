@@ -9,8 +9,6 @@ let map=["WWWWWWW",
 let key = {};
 let direction = '';
 let playerPos = [4,3]; // 1st = y    2nd = x
-let movePos=playerPos;//position user is trying to move to
-let isMoving=false; // first bool indicating if the next cell is free for moving    the next one 
 // Game cycle listen -> check -> update -> redraw
 
 function listen() {
@@ -19,70 +17,79 @@ function listen() {
     });
 }
 
-function checkForFreeSpace(map,movePos,direction,isCrateBehind){
-    let cell=map[movePos[0]][movePos[1]]
-    switch (cell){
-    case 'W':
-        return false;
-    case ' ':
-    case 'T':
-        return true;
-    case 'C':
-    case 'X':
-        if (isCrateBehind===true){
-            return false
-        }
-        switch(direction){
-            case 'w':
-                movePos[0]-=1
-                break
-            case 's':
-                movePos[0]+=1
-                break
-            case 'a':
-                movePos[1]-=1
-                break
-            case 'd':
-                movePos[1]+=1
-                break
-        }                                            
-        return checkForFreeSpace(map,movePos,direction,true)
+function move(map, direction, playerPos) {
+    let destination = [playerPos[0], playerPos[1]];
+    let delta = [0, 0];
+    
+    switch(direction) {
+        case 'w': delta = [-1, 0]; break;
+        case 's': delta = [1, 0]; break;
+        case 'a': delta = [0, -1]; break;
+        case 'd': delta = [0, 1]; break;
+        default: return null;
     }
-}
-
-function move(map,movePos,playerPos){
-    let delta;
-    while(movePos[0]===playerPos[0] && movePos[1]===playerPos[1]){
-        if (movePos[0]!=playerPos[0]){
-            while(1){
-                delta=movePos[0]-playerPos[0]
-                map[movePos[0]][movePos[1]]=map[movePos[0]+delta][movePos[1]]}
+    
+    destination[0] += delta[0];
+    destination[1] += delta[1];
+    
+    let destinationCell = map[destination[0]][destination[1]];
+    
+    // Check validity
+    if (destinationCell === 'W') return null; // Wall
+    
+    // If moving into crate, check if crate can be pushed
+    if (destinationCell === 'C' || destinationCell === 'X') {
+        let cratedestination = [destination[0] + delta[0], destination[1] + delta[1]];
+        let cratedestinationCell = map[cratedestination[0]][cratedestination[1]];
+        
+        // Can't push into wall or another crate
+        if (cratedestinationCell === 'W' || cratedestinationCell === 'C' || cratedestinationCell === 'X') {
+            return null;
         }
     }
+    
+    // Move is valid - update map
+    let newMap = map.map(row => row.split(''));
+    let currentPlayerCell = newMap[playerPos[0]][playerPos[1]];
+    
+    // Handle crate push
+    if (destinationCell === 'C' || destinationCell === 'X') {
+        let cratedestination = [destination[0] + delta[0], destination[1] + delta[1]];
+        let cratedestinationCell = newMap[cratedestination[0]][cratedestination[1]];
+        
+        // Move crate
+        newMap[cratedestination[0]][cratedestination[1]] = (cratedestinationCell === 'T') ? 'X' : 'C';
+        // Move player to crate position
+        newMap[destination[0]][destination[1]] = (destinationCell === 'X') ? 'O' : 'P';
+    } else {
+        // Simple move
+        newMap[destination[0]][destination[1]] = (destinationCell === 'T') ? 'O' : 'P';
+    }
+    
+    // Clear old position
+    newMap[playerPos[0]][playerPos[1]] = (currentPlayerCell === 'O') ? 'T' : ' ';
+    
+    return {
+        map: newMap.map(row => row.join('')),
+        playerPos: destination
+    };
 }
 
 
 
-function check() {
+function processKeyPress() {
     switch(key){
         case 'w':
-            movePos[0]-=1
             direction='w'
-            isFree=checkForFreeSpace(map,movePos,direction,false)
-            if(isFree){
-
-            }
+            move(map,direction,playerPos)
         case 's':
+            direction='s'
+            move(map,direction,playerPos)
         case 'a':
+            direction='a'
+            move(map,direction,playerPos)
         case 'd':
+            direction='d'
+            move(map,direction,playerPos)
     }
 }
-
-// Your existing code above...
-
-// TEST SECTION - Remove later
-console.log("Testing checkForFreeSpace:");
-console.log("Player -> Empty:", checkForFreeSpace(map, [4, 4], 'd', false)); // should be true
-console.log("Player -> Wall:", checkForFreeSpace(map, [4, 0], 'a', false));  // should be false
-console.log("Player -> Crate -> Empty:", checkForFreeSpace(map, [2, 2], 'a', false)); // should be true?
-//console.log("Player -> Crate -> Crate:", checkForFreeSpace(map, [?, ?], '?', false)); // should be false
