@@ -17,12 +17,12 @@
 }
 
 .player {
-  background-image: url('assets/player.png');
+  background-image: url('assets/player.png'), url('assets/ground.png');
   background-size: contain;
 }
 
 .player_ground {
-  background-image: url('assets/player.png') url('assets/ground_target.png');
+  background-image: url('assets/player.png'), url('assets/ground_target.png');
   background-size: contain;
 }
 
@@ -32,7 +32,7 @@
 }
 
 .crate_target{
-  background-image: url('assets/crate_target.png');
+  background-image: url('assets/crate_target.png'),url('assets/ground.png');
   background-size: contain;
 }
 
