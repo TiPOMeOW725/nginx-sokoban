@@ -1,0 +1,45 @@
+.grid-container {
+  display: grid;
+  justify-content: center;
+  gap: 0px;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+}
+
+.wall {
+  background-image: url('assets/wall.png');
+  background-size: contain;
+}
+
+.player {
+  background-image: url('assets/player.png'), url('assets/ground.png');
+  background-size: contain;
+}
+
+.player_ground {
+  background-image: url('assets/player.png'), url('assets/ground_target.png');
+  background-size: contain;
+}
+
+.crate{
+  background-image: url('assets/crate.png');
+  background-size: contain;
+}
+
+.crate_target{
+  background-image: url('assets/crate_target.png'),url('assets/ground.png');
+  background-size: contain;
+}
+
+.ground{
+  background-image: url('assets/ground.png');
+  background-size: contain;
+}
+
+.ground_target{
+  background-image: url('assets/ground_target.png');
+  background-size: contain;
+}
