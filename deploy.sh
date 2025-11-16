@@ -1,5 +1,6 @@
-sudo apt update && sudo apt upgrade -y && sudo apt install nginx -y
+sudo apt update && sudo apt upgrade -y && sudo apt install nginx ufw -y
 
+sudo systemctl enable --now nginx
 sudo systemctl enable --now nginx  
 read -p "Please enter the IP or domain you want to use: " domain_name
 sudo mkdir -p /var/www/sokoban/{html,css,js,assets}
@@ -19,8 +20,8 @@ server {
     listen [::]:80;
 
     server_name ${domain_name};
-    root /var/www/sokoban/html;
-    index index.html index.htm;
+    root /var/www/sokoban/;
+    index /html/index.html index.htm;
 
     location / {
         try_files \$uri \$uri/ =404;
