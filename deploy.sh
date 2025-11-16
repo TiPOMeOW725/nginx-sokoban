@@ -19,27 +19,27 @@ server {
     listen [::]:80;
 
     server_name ${domain_name};
-    root /var/www/sokoban/html;  # Fixed path
+    root /var/www/sokoban/html;
     index index.html index.htm;
 
     location / {
-        try_files \$uri \$uri/ =404;  # Escape $ for literal
+        try_files \$uri \$uri/ =404;
     }
 
     location ~* \.css$ {
         gzip on;
-        expires 15min;
+        expires 15m;
         add_header Cache-Control "public, immutable";
     }
 
     location ~* \.(js|map)$ {
         gzip on;
-        expires 15min;
+        expires 15m;
         add_header Cache-Control "public, immutable";
     }
 
     location ~* \.(png|jpg|jpeg|gif|ico|svg|webp)$ {
-        expires 1min;
+        expires 1m;
         add_header Cache-Control "public, immutable";
         access_log off;
     }
