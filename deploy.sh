@@ -1,6 +1,6 @@
 sudo apt update && sudo apt upgrade -y && sudo apt install nginx -y
 
-sudo systemctl enable ngisudo systemctl enable --now nginx  
+sudo systemctl enable --now nginx  
 read -p "Please enter the IP or domain you want to use: " domain_name
 sudo mkdir -p /var/www/sokoban/{html,css,js,assets}
 
