@@ -1,6 +1,6 @@
 # Sokoban Static Site Deployment
 
-This project hosts a browser-based Sokoban game on a remote Linux server using Nginx. It acts as a demonstration of setting up a web server, configuring Nginx for static content, and using rsync to deploy file updates.
+This project was made as a challenge from roadmap.sh(https://roadmap.sh/projects/static-site-server). It hosts a browser-based Sokoban game on a remote Linux server using Nginx. It acts as a demonstration of setting up a web server, configuring Nginx for static content, and using rsync to deploy file updates.
 
 ## Prerequisites
 
